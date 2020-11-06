@@ -11,6 +11,6 @@ inicio_sem: aquí debe establecerse la fecha de incio de la semana correspondien
 
 inicio_quin: aquí debe establecerse la fecha de incio de la quincena correspondiente en formato: "dd/mm/aaaa"
 
-patron = "Y6047300105", es el número de registro patronal, tiene el valor "Y6047300105" como default
+patron = "Y123456790", es el número de registro patronal, tiene el valor "Y123456790" como default (es necesario moficarlo al de la empresa correspondiente)
 
 mov = 30 , es el número de movimiento que se realiza dentro del SUA,tiene el valor 30 como default
