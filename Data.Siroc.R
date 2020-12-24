@@ -1,4 +1,4 @@
-Data.SUA <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y1234567890", mov = 30 ) {
+Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y1234567890", mov = 30 ) {
   
   #primero se extare el dato del período al que pertencen los recibos, ya sea semanal o quincenal
  
