@@ -1,0 +1,41 @@
+#Esta función convierte la información de movimientos de bajas en una hoja de excel a un archivo que puede importarse directamente al SUA
+
+BAJAS <- function(patron = "Y1234567890", mov = "02", espacios = "          " ){
+
+  library(data.table)
+  library(dplyr)
+  library(readxl)
+#Se lee el archivo con los SDI por puesto
+  SDI <- read_excel("BAJAS_FORMS.xlsx", sheet = "SDI")
+
+#Se lee el archivo y se extraen las columnas requeridas (fecha, nss, puesto)
+  MOVIMIENTOS <- read_excel("BAJAS_FORMS.xlsx", sheet = "Hoja2")
+  
+  MOV_F <- MOVIMIENTOS[,c(1,5,7)]
+  
+  #se convierten las fechas de formato aaaa-mm-dd a ddmmaaaa
+  
+  Fechas <- as.character(MOV_F$FECHA)
+  
+  dia <- substr(Fechas,9,10)
+  mes <- substr(Fechas,6,7)
+  anio <- substr(Fechas,1,4)
+  
+  Fecha_F <- paste(dia,mes,anio,sep = "")
+  
+  #se utiliza el puesto para identificar el SDI del data.frame puesto
+  
+  PUESTO <- substr(MOV_F$PUESTO,1,2)
+  
+  PUESTO <- as.data.frame(PUESTO)
+  
+  join_puesto <- left_join(PUESTO,SDI)
+  
+  SDI_O <- join_puesto$SDI
+  
+  #se concatenan los campos utilizados para despuess ser convertidos a un archivo txt
+  
+  txt <- paste(patron,MOV_F$`Num. IMSS`,mov,Fecha_F, espacios,SDI_O,sep = "")
+  write.table(txt, file = "Bajas.txt",row.names = FALSE,col.names = FALSE,quote = FALSE)
+  
+}
