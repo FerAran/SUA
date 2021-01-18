@@ -1,0 +1,36 @@
+#Esta función ordena alfabéticamente, primero por obra y después por nombre los recibos de nómina. 
+
+ordenar <- function(archivo) {
+  
+library(pdftools)
+
+#Se extrae la categoría de "Depto" y "nombre", además de crear un vector de páginas
+
+nombre <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(archivo), 
+                 "Nombre: +"), `[`, 2), "\r"), `[`, 1)
+nombre <- as.character(nombre)
+
+OBRA <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(archivo),"Depto\\.: +"), `[`, 2), "\r"), `[`, 1)
+
+OBRA <- as.character(OBRA)
+
+OBRA <- substr(OBRA,1,5)
+
+OBRA <- as.data.frame(OBRA)
+
+combine_n <- cbind(OBRA,nombre)
+
+pagina <- time(nombre)
+
+combine_n <- cbind(combine_n,pagina)
+
+#Se indica como ordenar
+
+orden<- with(combine_n, combine_n[order(OBRA, nombre) , ])
+
+#Se extrae el vector de las páginas y se indica que el pdf sea ordenado con base en el vector de páginas
+
+ordenado <- as.vector(orden$pagina)
+
+pdf_subset(archivo, pages = ordenado, output = "compilado_a-z.pdf")
+}
