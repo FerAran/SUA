@@ -1,15 +1,14 @@
 # SUA
 
-Repositorio que actuelamente cuenta con las siguientes funciones para facilitar la importación de movientos al SUA:
+Repositorio que actualmente cuenta con las siguientes funciones para facilitar la importación de movientos al SUA:
 
-Data.Siroc: crea un archivo en formato txt con el formato requerido para los movimientos en el SIROC a partir de un archivo pdf con los recibos de nómina.
+Data.Siroc: crea un archivo en formato txt con el formato requerido para importar los movimientos en el SIROC a partir de un archivo pdf con los recibos de nómina.
 
-Bajas:
+Bajas:  crea un archivo en formato txt con el formato requerido para importar los movimientos de bajas, no requiere de argumentos.
 
-Ordenar:
+Ordenar: Ordena alfabéticamente, primero por obra y después por nombre los recibos de nómina, únicamente requiere indicar el archivo a utilizar. 
 
-
-Data.SUA: 
+Data.Siroc: 
 
 La función consta de los siguientes argumentos:
 
