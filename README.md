@@ -1,7 +1,15 @@
 # SUA
-Función de extracción de datos para importación de SIROC a SUA
 
-La función Data.SUA crea un archivo en formato txt con el formato requerido para los movimientos en el SIROC a partir de un archivo pdf con los recibos de nómina.
+Repositorio que actuelamente cuenta con las siguientes funciones para facilitar la importación de movientos al SUA:
+
+Data.Siroc: crea un archivo en formato txt con el formato requerido para los movimientos en el SIROC a partir de un archivo pdf con los recibos de nómina.
+
+Bajas:
+
+Ordenar:
+
+
+Data.SUA: 
 
 La función consta de los siguientes argumentos:
 
