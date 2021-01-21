@@ -1,0 +1,33 @@
+#Esta función extrae los datos de nombre, obra y salario de los recibos de nomina y los exporta a un archivo en excel,
+#además es necesario especificar el nombre del archivo del que se extrae la información, la fecha en formato "dd/mm/aaaa" y la semana en curso. 
+
+salarios <- function(archivo,fecha, semana) {
+  
+  library(pdftools)
+  library(xlsx)
+  
+nombre <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(archivo), 
+                                          "Nombre: +"), `[`, 2), "\r"), `[`, 1)
+nombre <- as.character(nombre)
+
+OBRA <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(archivo),"Depto\\.: +"), `[`, 2), "\r"), `[`, 1)
+
+OBRA <- as.character(OBRA)
+
+OBRA <- substr(OBRA,1,11)
+
+OBRA <- as.data.frame(OBRA)
+
+pagina <- time(nombre)
+
+sal <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(archivo), "Total: +"), `[`, 2), "\r"), `[`, 1)
+sal_Filt_1 <- trimws(sal)
+sal_Filt_2 <- gsub(",","", sal_Filt_1)
+sal_F<- as.data.frame.numeric(sal_Filt_2)
+
+sheets <- list("nombre" = nombre, "obra" = OBRA, "fecha" = fecha, "semana" = semana, "Sueldo" = sal_F, "Pagina" = pagina)
+write.xlsx(sheets,file="salarios.xlsx")
+
+
+
+}
