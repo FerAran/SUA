@@ -1,4 +1,4 @@
-Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y6047300105", mov = 30 ) {
+Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y0123456789", mov = 30 ) {
   
   #primero se extare el dato del período al que pertencen los recibos, ya sea semanal o quincenal
   
@@ -21,8 +21,8 @@ Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y60473001
   
   #con base en las fechas de incio de semana y de quincena, se suman los días trabajados a la fecha de inicio 
   #de este modo se obtiene la fecha hasta la que el empleado trabajó en la semana
-  inicio_sem_1 <- as.Date(inicio_sem, format = "%d/%m/%y")
-  inicio_quin_1 <- as.Date(inicio_quin, format = "%d/%m/%y")
+  inicio_sem_1 <- as.Date(inicio_sem, format = "%d/%m/%Y")
+  inicio_quin_1 <- as.Date(inicio_quin, format = "%d/%m/%Y")
   
   
   inicio_F <- ifelse(per_sem == per_F,inicio_sem_1,inicio_quin_1)
