@@ -1,7 +1,7 @@
-Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y1234567890", mov = 30 ) {
+Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y6047300105", mov = 30 ) {
   
   #primero se extare el dato del período al que pertencen los recibos, ya sea semanal o quincenal
- 
+  
   per <- sapply(strsplit(sapply(strsplit(pdftools::pdf_text(files)," Periodo: +"), `[`, 2), "\r"), `[`, 1)
   per_Filt_1 <- trimws(per)
   per_Filt_2 <- as.numeric(per_Filt_1)
@@ -42,12 +42,16 @@ Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y12345678
   anio_i <- substr(inicio_c,1,4)
   
   Fecha_i <- paste(dia_i,mes_i,anio_i,sep = "")
+  #se crea data frame para su uso posterior en el objeto JUNTAR
+  Fecha_i_frame <- as.data.frame(Fecha_i)
   
   dia_f <- substr(termino_c,9,10)
   mes_f <- substr(termino_c,6,7)
   anio_f <- substr(termino_c,1,4)
   
-  Fecha_f <- paste(dia_f,mes_f,anio_f,sep = "")  
+  Fecha_f <- paste(dia_f,mes_f,anio_f,sep = "") 
+  #se crea data frame para su uso posterior en el objeto JUNTAR
+  Fecha_f_frame <- as.data.frame(Fecha_f)
   
   #se extrae el nss de cada trabajador y se le quitan los separadores "-"
   
@@ -55,7 +59,8 @@ Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y12345678
                                          "No\\. IMSS: +"), `[`, 2), "\r"), `[`, 1)
   nss_Filt <- gsub("-","", nss)
   nss_F <- as.character(nss_Filt)
-  
+  #se crea data frame para su uso posterior en el objeto JUNTAR
+  nss_Frame <- as.data.frame(nss_F)
   
   #Se extrae la obra a la que pretenece cada trabajador del ramo "depto"
   
@@ -71,21 +76,28 @@ Data.Siroc <- function(files,per_sem,inicio_sem,inicio_quin, patron = "Y12345678
   
   OBRA <- as.data.frame(OBRA)
   
+  library(readxl)
+  registros <- read_excel("registros.xlsx")
+  
   join_obra <- left_join(OBRA,registros)
   
   #se extrae únicamente la columna con el SIROC de la obra en la que está cada trabajador
   
   join_obra_s <- join_obra$siroc
+  #se crea data frame para su uso posterior en el objeto JUNTAR
+  obra_frame <- as.data.frame(join_obra_s)
   
-  
-  #el último paso es concatenar los criterios de  "patron", nss_F, mov,Fecha_i, Fecha_f y join_obra_s, 
+  #el último paso es concatenar los criterios de  "patron", nss_Frame, mov,Fecha_i_frame, Fecha_frame y obra_frame, 
+  #esto se hace con cbind y se guarda en el objeto JUNTAR, posteriormente na.omit se utiliza para descartar las obras que no tienen SIROC
   #en la misma cadena sin separadores. Para posteriormente ser convertido a un archivo txt que está listo
   #para su importación al SUA.
-
-
- 
-  txt <- paste(patron,  nss_F,mov,Fecha_i, Fecha_f,join_obra_s,sep = "")
   
-  write.table(txt, file = "batch.txt",row.names = FALSE,col.names = FALSE,quote = FALSE)
+  JUNTAR <- cbind(patron,  nss_Frame,mov,Fecha_i_frame, Fecha_f_frame,obra_frame)
+  JUNTAR_f <- na.omit(JUNTAR)
+  
+  txt <- paste(JUNTAR_f$patron,JUNTAR_f$nss_F,JUNTAR_f$mov,JUNTAR_f$Fecha_i,JUNTAR_f$Fecha_f,JUNTAR_f$join_obra_s,sep = "")
+  
+  write.table(txt, file = "SIROC.txt",row.names = FALSE,col.names = FALSE,quote = FALSE)
   
 }
+
