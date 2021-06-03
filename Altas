@@ -1,0 +1,41 @@
+#Esta función crea la cadena para las altas (nuevas) en el SUA
+#La función extrae tres variables: ALTAS, FECHA y PUESTO
+#La cadena altas es a su vez obtenida de varias fórmulas en Excel, la cuales se hayan en el archivo "Altas_forms.xlsx" 
+#A la cadena de altas se le agreaga la fecha y el sdi correspondiente al puesto del empleado, por últimos, se agrega una cadena de espacios
+
+ALTAS <- function(espacios = "                           00000000000000000   " ){
+  
+  library(data.table)
+  library(dplyr)
+  library(readxl)
+  #Se lee el archivo con los SDI por puesto
+  SDI <- read_excel("BAJAS_FORMS.xlsx", sheet = "SDI")
+  #Se lee el archivo y se extraen las columnas requeridas (cadena de altas)
+  MOVIMIENTOS <- read_excel("Altas_forms.xlsx", sheet = "Altas")
+  
+  Cadena <- MOVIMIENTOS$Altas
+  
+  Fechas <-  as.character(MOVIMIENTOS$Fecha)
+  
+  dia <- substr(Fechas,9,10)
+  mes <- substr(Fechas,6,7)
+  anio <- substr(Fechas,1,4)
+  
+  Fecha_F <- paste(dia,mes,anio,sep = "")
+  
+  #se utiliza el puesto para identificar el SDI del data.frame puesto
+  
+  PUESTO <- substr(MOVIMIENTOS$Puesto,1,2)
+  
+  PUESTO <- as.data.frame(PUESTO)
+  
+  join_puesto <- left_join(PUESTO,SDI)
+  
+  SDI_O <- join_puesto$SDI
+  
+  
+  txt <- paste(Cadena,Fecha_F,SDI_O,espacios,sep = "")
+  write.table(txt, file = "Altas.txt",row.names = FALSE,col.names = FALSE,quote = FALSE) 
+  
+}
+  
